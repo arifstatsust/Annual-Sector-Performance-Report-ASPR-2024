@@ -1,0 +1,527 @@
+================================================================================
+Query Name: 24 Schools
+--------------------------------------------------------------------------------
+SELECT GEN_INFO.[24 School], edn_thana.DIVISION_NAME, edn_thana.DISTRICT_NAME, edn_thana.UPAZILA_NAME, GEN_INFO.SCHOOL_CODE, GEN_INFO.SCHOOL_NAME_ENG, GEN_INFO.SCHOOL_NAME_BAN, Students_All.PRE_PRIMARY_BOY, Students_All.PRE_PRIMARY_GIRL, Students_All.TotalStudent, Teacher.Teacher
+FROM ((edn_thana INNER JOIN GEN_INFO ON edn_thana.AREA_CODE_Txt = GEN_INFO.AREA_CODE) LEFT JOIN Students_All ON GEN_INFO.SCHOOL_CODE = Students_All.SCHOOL_CODE) LEFT JOIN Teacher ON GEN_INFO.SCHOOL_CODE = Teacher.SCHOOL_CODE
+WHERE (((GEN_INFO.[24 School])="24"));
+
+
+
+================================================================================
+Query Name: 4_psql_Summary
+--------------------------------------------------------------------------------
+SELECT GEN_INFO.DIVISION_NAME, GEN_INFO.DISTRICT_NAME, GEN_INFO.UPAZILA_NAME, GEN_INFO.SCHOOL_TYPE_ID, GEN_INFO.SCHOOL_CODE, GEN_INFO.NO_OF_SHIFTS, GEN_INFO.SCHOOL_NAME_ENG, GEN_INFO.SCHOOL_NAME_BAN, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, STD_ADMISSION.ONE_BOY, STD_ADMISSION.ONE_GIRL, STD_ADMISSION.TWO_BOY, STD_ADMISSION.TWO_GIRL, STD_ADMISSION.THREE_BOY, STD_ADMISSION.THREE_GIRL, STD_ADMISSION.FOUR_BOY, STD_ADMISSION.FOUR_GIRL, STD_ADMISSION.FIVE_BOY, STD_ADMISSION.FIVE_GIRL, [Number of Classrooms by Schools].SumOfCountOfSCHOOL_CODE, GPS_Teacher.Teacher, [FIVE_BOY]+[FIVE_GIRL]+[FOUR_BOY]+[FOUR_GIRL]+[ONE_BOY]+[ONE_GIRL]+[PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL]+[THREE_BOY]+[THREE_GIRL]+[TWO_BOY]+[TWO_GIRL] AS Students, [Students]/[Teacher] AS STR, [Students]/[SumOfCountOfSCHOOL_CODE] AS SCR, IIf([SCR]<=25 And [STR]<=25 And [SumOfCountOfSCHOOL_CODE]>=6 And [Teacher]>=6,1,0) AS Condition_Satisfy
+FROM ((GEN_INFO INNER JOIN STD_ADMISSION ON GEN_INFO.SCHOOL_CODE = STD_ADMISSION.SCHOOL_CODE) INNER JOIN [Number of Classrooms by Schools] ON STD_ADMISSION.SCHOOL_CODE = [Number of Classrooms by Schools].SCHOOL_CODE) INNER JOIN GPS_Teacher ON GEN_INFO.SCHOOL_CODE = GPS_Teacher.SCHOOL_CODE
+GROUP BY GEN_INFO.DIVISION_NAME, GEN_INFO.DISTRICT_NAME, GEN_INFO.UPAZILA_NAME, GEN_INFO.SCHOOL_TYPE_ID, GEN_INFO.SCHOOL_CODE, GEN_INFO.NO_OF_SHIFTS, GEN_INFO.SCHOOL_NAME_ENG, GEN_INFO.SCHOOL_NAME_BAN, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, STD_ADMISSION.ONE_BOY, STD_ADMISSION.ONE_GIRL, STD_ADMISSION.TWO_BOY, STD_ADMISSION.TWO_GIRL, STD_ADMISSION.THREE_BOY, STD_ADMISSION.THREE_GIRL, STD_ADMISSION.FOUR_BOY, STD_ADMISSION.FOUR_GIRL, STD_ADMISSION.FIVE_BOY, STD_ADMISSION.FIVE_GIRL, [Number of Classrooms by Schools].SumOfCountOfSCHOOL_CODE, GPS_Teacher.Teacher, [FIVE_BOY]+[FIVE_GIRL]+[FOUR_BOY]+[FOUR_GIRL]+[ONE_BOY]+[ONE_GIRL]+[PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL]+[THREE_BOY]+[THREE_GIRL]+[TWO_BOY]+[TWO_GIRL]
+HAVING (((GEN_INFO.SCHOOL_TYPE_ID)=2026 Or (GEN_INFO.SCHOOL_TYPE_ID)=2027 Or (GEN_INFO.SCHOOL_TYPE_ID)=2029) AND ((GEN_INFO.NO_OF_SHIFTS)<>1))
+ORDER BY GEN_INFO.DIVISION_NAME, GEN_INFO.DISTRICT_NAME, GEN_INFO.UPAZILA_NAME;
+
+
+
+================================================================================
+Query Name: 6-10 yrs
+--------------------------------------------------------------------------------
+SELECT AGE_WISE_ADMISSION.AGE, AGE_WISE_ADMISSION.UPAZILA_CODE, AGE_WISE_ADMISSION.SCHOOL_CODE, AGE_WISE_ADMISSION.ONE_BOY, AGE_WISE_ADMISSION.ONE_GIRL, AGE_WISE_ADMISSION.TWO_BOY, AGE_WISE_ADMISSION.TWO_GIRL, AGE_WISE_ADMISSION.THREE_BOY, AGE_WISE_ADMISSION.THREE_GIRL, AGE_WISE_ADMISSION.FOUR_BOY, AGE_WISE_ADMISSION.FOUR_GIRL, AGE_WISE_ADMISSION.FIVE_BOY, AGE_WISE_ADMISSION.FIVE_GIRL
+FROM AGE_WISE_ADMISSION
+WHERE (((AGE_WISE_ADMISSION.AGE)=6 Or (AGE_WISE_ADMISSION.AGE)=7 Or (AGE_WISE_ADMISSION.AGE)=8 Or (AGE_WISE_ADMISSION.AGE)=9 Or (AGE_WISE_ADMISSION.AGE)=10));
+
+
+
+================================================================================
+Query Name: 6-10 yrs_Dist
+--------------------------------------------------------------------------------
+SELECT Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Sum([ONE_BOY]+[TWO_BOY]+[THREE_BOY]+[FOUR_BOY]+[FIVE_BOY]) AS Boys, Sum([ONE_GIRL]+[TWO_GIRL]+[THREE_GIRL]+[FOUR_GIRL]+[FIVE_GIRL]) AS GIRLs, Sum([ONE_BOY]+[TWO_BOY]+[THREE_BOY]+[FOUR_BOY]+[FIVE_BOY]+[ONE_GIRL]+[TWO_GIRL]+[THREE_GIRL]+[FOUR_GIRL]+[FIVE_GIRL]) AS Total
+FROM Thana_List INNER JOIN [6-10 yrs] ON Thana_List.AREA_CODE = [6-10 yrs].UPAZILA_CODE
+GROUP BY Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME;
+
+
+
+================================================================================
+Query Name: Age_PPE_1
+--------------------------------------------------------------------------------
+SELECT SCHOOL_TYPE.Order_New, AGE_WISE_ADMISSION.EMIS_CODE, AGE_WISE_ADMISSION.SCHOOL_CODE, AGE_WISE_ADMISSION.AGE, AGE_WISE_ADMISSION.PRE_PRIMARY_BOY, AGE_WISE_ADMISSION.PRE_PRIMARY_GIRL, [PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL] AS Total
+FROM SCHOOL_TYPE INNER JOIN AGE_WISE_ADMISSION ON SCHOOL_TYPE.SCHOOL_TYPE_ID = AGE_WISE_ADMISSION.SCHOOL_TYPE_ID
+WHERE (((SCHOOL_TYPE.Order_New)=1) AND (([PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL])>0));
+
+
+
+================================================================================
+Query Name: Age-wise admission
+--------------------------------------------------------------------------------
+SELECT 
+FROM AGE_WISE_ADMISSION;
+
+
+
+================================================================================
+Query Name: AllSchoo_List_2023
+--------------------------------------------------------------------------------
+SELECT Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME, GEN_INFO.SCHOOL_CODE, SCHOOL_TYPE.NAME_New, GEN_INFO.UNION_CODE, GEN_INFO.UNION_NAME, GEN_INFO.SCHOOL_NAME_BAN, GEN_INFO.SCHOOL_NAME_ENG
+FROM Thana_List INNER JOIN (GEN_INFO INNER JOIN SCHOOL_TYPE ON GEN_INFO.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID) ON Thana_List.AREA_CODE_Text = GEN_INFO.AREA_CODE;
+
+
+
+================================================================================
+Query Name: Annex_3
+--------------------------------------------------------------------------------
+SELECT SCHOOL_TYPE.Order_New, edn_thana.DIVISION_NAME, edn_thana.DISTRICT_NAME, edn_thana.UPAZILA_NAME, GEN_INFO.SCHOOL_CODE, GEN_INFO.SCHOOL_NAME_ENG, STD_ADMISSION.SIX_EIGHT_BOY, STD_ADMISSION.SIX_EIGHT_GIRL, [SIX_EIGHT_BOY]+[SIX_EIGHT_GIRL] AS Total
+FROM (edn_thana INNER JOIN (GEN_INFO LEFT JOIN STD_ADMISSION ON GEN_INFO.SCHOOL_CODE = STD_ADMISSION.SCHOOL_CODE) ON edn_thana.AREA_CODE_Txt = GEN_INFO.AREA_CODE) INNER JOIN SCHOOL_TYPE ON GEN_INFO.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID
+WHERE (((SCHOOL_TYPE.Order_New)=1));
+
+
+
+================================================================================
+Query Name: City_Corporation
+--------------------------------------------------------------------------------
+SELECT SCHOOL_TYPE.Order_New, Thana_List.DIVISION_NAME, Sum(IIf([UNDER_MUNICIPALITY]='1',1,Null)) AS MUNICIPALITY, Sum(IIf([UNDER_CITY_CORPORATION_New]="1",1,Null)) AS CITY_CORPORATION
+FROM (Thana_List INNER JOIN GEN_INFO ON Thana_List.AREA_CODE = GEN_INFO.UPAZILA_CODE) INNER JOIN SCHOOL_TYPE ON GEN_INFO.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID
+GROUP BY SCHOOL_TYPE.Order_New, Thana_List.DIVISION_NAME
+HAVING (((SCHOOL_TYPE.Order_New)=1));
+
+
+
+================================================================================
+Query Name: Class_Room
+--------------------------------------------------------------------------------
+SELECT Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME, ROOM.SCHOOL_CODE, ROOM.SCHOOL_CODE_Text, GEN_INFO.SCHOOL_NAME_ENG, Count(IIf([USAGE_PURPOSE]=15,"Classroom",Null)) AS Class_room, Count(IIf([USAGE_PURPOSE]=3114,"PPEROOM",Null)) AS PPE_Room, [Class_Room]+[PPE_Room] AS TotalCLRooms
+FROM Thana_List INNER JOIN (GEN_INFO INNER JOIN ROOM ON GEN_INFO.SCHOOL_CODE = ROOM.SCHOOL_CODE) ON Thana_List.AREA_CODE_Text = GEN_INFO.AREA_CODE
+GROUP BY Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME, ROOM.SCHOOL_CODE, ROOM.SCHOOL_CODE_Text, GEN_INFO.SCHOOL_NAME_ENG;
+
+
+
+================================================================================
+Query Name: Class_Room_NotZero
+--------------------------------------------------------------------------------
+SELECT Class_Room.SCHOOL_CODE, Class_Room.Class_room, Class_Room.PPE_Room, Class_Room.TotalCLRooms
+FROM Class_Room
+WHERE (((Class_Room.Class_room)>0) AND ((Class_Room.TotalCLRooms)>0));
+
+
+
+================================================================================
+Query Name: Cohort_March 25
+--------------------------------------------------------------------------------
+SELECT SCHOOL_TYPE.Order_New, SCHOOL_TYPE.NAME_New, Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, STD_ADMISSION.ONE_BOY, STD_ADMISSION.TWO_BOY, STD_ADMISSION.THREE_BOY, STD_ADMISSION.FOUR_BOY, STD_ADMISSION.FIVE_BOY, STD_ADMISSION.ONE_GIRL, STD_ADMISSION.TWO_GIRL, STD_ADMISSION.THREE_GIRL, STD_ADMISSION.FOUR_GIRL, STD_ADMISSION.FIVE_GIRL, [ONE_BOY]+[ONE_GIRL] AS One, [TWO_BOY]+[TWO_GIRL] AS Two, [THREE_BOY]+[THREE_GIRL] AS Three, [FOUR_BOY]+[FOUR_GIRL] AS Four, [FIVE_BOY]+[FIVE_GIRL] AS FIve
+FROM Thana_List INNER JOIN (STD_ADMISSION INNER JOIN SCHOOL_TYPE ON STD_ADMISSION.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID) ON Thana_List.AREA_CODE = STD_ADMISSION.UPAZILA_CODE
+GROUP BY SCHOOL_TYPE.Order_New, SCHOOL_TYPE.NAME_New, Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, STD_ADMISSION.ONE_BOY, STD_ADMISSION.TWO_BOY, STD_ADMISSION.THREE_BOY, STD_ADMISSION.FOUR_BOY, STD_ADMISSION.FIVE_BOY, STD_ADMISSION.ONE_GIRL, STD_ADMISSION.TWO_GIRL, STD_ADMISSION.THREE_GIRL, STD_ADMISSION.FOUR_GIRL, STD_ADMISSION.FIVE_GIRL
+HAVING (((SCHOOL_TYPE.Order_New)=1 Or (SCHOOL_TYPE.Order_New)=2 Or (SCHOOL_TYPE.Order_New)=3 Or (SCHOOL_TYPE.Order_New)=6 Or (SCHOOL_TYPE.Order_New)=7 Or (SCHOOL_TYPE.Order_New)=8));
+
+
+
+================================================================================
+Query Name: Copy Of Trained_Teacher_Final
+--------------------------------------------------------------------------------
+SELECT Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Sum(IIf(([C-in-Ed]="C_In-Ed" And [Gender]="MALE"),1,Null)) AS Male_CInED, Sum(IIf(([C-in-Ed]="C_In-Ed" And [Gender]="FEMALE"),1,Null)) AS Feale_CInED, Sum(IIf(([DPED]="DPEd" And [Gender]="MALE"),1,Null)) AS Male_DPED, Sum(IIf(([DPED]="DPEd" And [Gender]="FEMALE"),1,Null)) AS Female_DPED
+FROM Thana_List INNER JOIN Trained_TeacherGPS ON Thana_List.AREA_CODE = Trained_TeacherGPS.UPA_CODE
+GROUP BY Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME;
+
+
+
+================================================================================
+Query Name: Data_Analysis
+--------------------------------------------------------------------------------
+SELECT Students_All.DIVISION_NAME, Students_All.DISTRICT_NAME, Students_All.UPAZILA_NAME, Students_All.SCHOOL_CODE, Students_All.Order_New, Students_All.SCHOOL_NAME_ENG, Students_All.ONE_BOY, Enrolment_All_2022.ONE_BOY, Students_All.ONE_GIRL, Enrolment_All_2022.ONE_GIRL, Students_All.TWO_BOY, Enrolment_All_2022.TWO_BOY, Students_All.TWO_GIRL, Enrolment_All_2022.TWO_GIRL, Students_All.THREE_BOY, Enrolment_All_2022.THREE_BOY, Students_All.THREE_GIRL, Enrolment_All_2022.THREE_GIRL, Students_All.FOUR_BOY, Enrolment_All_2022.FOUR_BOY, Students_All.FOUR_GIRL, Enrolment_All_2022.FOUR_GIRL, Students_All.FIVE_BOY, Enrolment_All_2022.FIVE_BOY, Students_All.FIVE_GIRL, Enrolment_All_2022.FIVE_GIRL, Students_All.TotalStudent, Enrolment_All_2022.Total, Students_All.Boys, Students_All.Girls, Teacher.Teacher, Class_Room.Class_room, Round([TotalStudent]/[Teacher],0) AS STR, Round([TotalStudent]/[Class_room],0) AS SCR, Students_All.[24 School], Round((([Enrolment_All_2022].[FIVE_BOY]+[Enrolment_All_2022].[FIVE_GIRL])-([Data_Repeater].[FIVE_REPEATING_BOY]+[Data_Repeater].[FIVE_REPEATING_Girl]))/([Enrolment_All_2022].[FIVE_BOY]+[Enrolment_All_2022].[FIVE_GIRL])*100,0) AS PassedRate, Round(([Enrolment_All_2022].[FIVE_BOY]+[Enrolment_All_2022].[FIVE_GIRL])-([Data_Repeater].[FIVE_REPEATING_BOY]+[Data_Repeater].[FIVE_REPEATING_Girl])) AS TotalPassed, ([Data_Repeater].[FIVE_REPEATING_BOY]+[Data_Repeater].[FIVE_REPEATING_Girl]) AS repGrd5, Data_Repeater.FIVE_REPEATING_BOY, Data_Repeater.FIVE_REPEATING_GIRL, Data_ICT.MULTIMEDIA_Class, Data_ICT.Computer
+FROM ((Enrolment_All_2022 LEFT JOIN ((Students_All LEFT JOIN Teacher ON Students_All.SCHOOL_CODE = Teacher.SCHOOL_CODE) LEFT JOIN Class_Room ON Students_All.SCHOOL_CODE = Class_Room.SCHOOL_CODE) ON Enrolment_All_2022.SCHOOL_CODE = Students_All.SCHOOL_CODE) LEFT JOIN Data_Repeater ON Students_All.SCHOOL_CODE = Data_Repeater.SCHOOL_CODE) LEFT JOIN Data_ICT ON Students_All.SCHOOL_CODE = Data_ICT.SCHOOL_CODE
+WHERE (((Students_All.Order_New)=1));
+
+
+
+================================================================================
+Query Name: Data_ICT
+--------------------------------------------------------------------------------
+SELECT ICT_INFO.SCHOOL_CODE, ICT_INFO.SCHOOL_TYPE_ID, SCHOOL_TYPE.Order_New, Sum(IIf([MULTIMEDIA_USE_IN_CLASS]=1 Or [MULTIMEDIA_BASED_CLASSROOMS]=1 Or [MULTIMEDIA_INTERACTIVE_CLASSROOMS]=1,1,Null)) AS MULTIMEDIA_Class, Sum(IIf([DESKTOP_AVAILABLE]=1 Or [LAPTOP_AVAILABLE]=1,1,Null)) AS Computer, Sum(IIf([NET_USE_FOR_LEARNING]=1,1,Null)) AS InternetUsed
+FROM ICT_INFO INNER JOIN SCHOOL_TYPE ON ICT_INFO.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID
+GROUP BY ICT_INFO.SCHOOL_CODE, ICT_INFO.SCHOOL_TYPE_ID, SCHOOL_TYPE.Order_New
+HAVING (((SCHOOL_TYPE.Order_New)=1));
+
+
+
+================================================================================
+Query Name: Data_Repeater
+--------------------------------------------------------------------------------
+SELECT PASS_REPEATER.UPAZILA_CODE, PASS_REPEATER.SCHOOL_CODE, PASS_REPEATER.SCHOOL_TYPE_ID, SCHOOL_TYPE.Order_New, PASS_REPEATER.PRE_PRIMARY_REPEATING_BOY AS PPE_RE_Boy, PASS_REPEATER.PRE_PRIMARY_REPEATING_GIRL AS PPE_RE_Girl, PASS_REPEATER.ONE_REPEATING_BOY AS Grd1_Re_Boy, PASS_REPEATER.ONE_REPEATING_GIRL AS Grd1_Re_Girl, PASS_REPEATER.TWO_REPEATING_BOY AS Grd2_Re_Boy, PASS_REPEATER.TWO_REPEATING_GIRL AS Grd2_Re_Girl, PASS_REPEATER.THREE_REPEATING_BOY AS Grd3_Re_Boy, PASS_REPEATER.THREE_REPEATING_GIRL AS Grd3_Re_Girl, PASS_REPEATER.FOUR_REPEATING_BOY AS Grd4_Re_Boy, PASS_REPEATER.FOUR_REPEATING_GIRL AS Grd4_Re_GIRL, PASS_REPEATER.FIVE_REPEATING_BOY, PASS_REPEATER.FIVE_REPEATING_GIRL, [FIVE_REPEATING_BOY]+[FIVE_REPEATING_GIRL] AS Repeater5
+FROM SCHOOL_TYPE INNER JOIN PASS_REPEATER ON SCHOOL_TYPE.SCHOOL_TYPE_ID = PASS_REPEATER.SCHOOL_TYPE_ID;
+
+
+
+================================================================================
+Query Name: Enrolment_All_2022
+--------------------------------------------------------------------------------
+SELECT edn_thana.DIVISION_NAME, edn_thana.DISTRICT_NAME, Enrolment_2022.SCHOOL_CODE, SCHOOL_TYPE.Order_New, SCHOOL_TYPE.NAME_New, Enrolment_2022.ONE_BOY, Enrolment_2022.ONE_GIRL, Enrolment_2022.TWO_BOY, Enrolment_2022.TWO_GIRL, Enrolment_2022.THREE_BOY, Enrolment_2022.THREE_GIRL, Enrolment_2022.FOUR_BOY, Enrolment_2022.FOUR_GIRL, Enrolment_2022.FIVE_BOY, Enrolment_2022.FIVE_GIRL, [ONE_BOY]+[Two_BOY]+[Three_BOY]+[Four_BOY]+[Five_Boy]+[ONE_Girl]+[Two_Girl]+[Three_Girl]+[Four_Girl]+[Five_Girl] AS Total_22, [ONE_BOY]+[Two_BOY]+[Three_BOY]+[Four_BOY]+[Five_Boy] AS Boys, [ONE_Girl]+[Two_Girl]+[Three_Girl]+[Four_Girl]+[Five_Girl] AS Girls
+FROM edn_thana INNER JOIN (Enrolment_2022 INNER JOIN SCHOOL_TYPE ON Enrolment_2022.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID) ON edn_thana.AREA_CODE = Enrolment_2022.UPAZILA_CODE;
+
+
+
+================================================================================
+Query Name: EnrolmentData_Validation
+--------------------------------------------------------------------------------
+SELECT Students_All.DIVISION_NAME, Students_All.DISTRICT_NAME, Students_All.UPAZILA_NAME, Students_All.SCHOOL_CODE, Students_All.Order_New, Students_All.SCHOOL_NAME_ENG, Students_All.ONE_BOY, Enrolment_All_2022.ONE_BOY, Students_All.ONE_GIRL, Enrolment_All_2022.ONE_GIRL, Students_All.TWO_BOY, Enrolment_All_2022.TWO_BOY, Students_All.TWO_GIRL, Enrolment_All_2022.TWO_GIRL, Students_All.THREE_BOY, Enrolment_All_2022.THREE_BOY, Students_All.THREE_GIRL, Enrolment_All_2022.THREE_GIRL, Students_All.FOUR_BOY, Enrolment_All_2022.FOUR_BOY, Students_All.FOUR_GIRL, Enrolment_All_2022.FOUR_GIRL, Students_All.FIVE_BOY, Enrolment_All_2022.FIVE_BOY, Students_All.FIVE_GIRL, Enrolment_All_2022.FIVE_GIRL, Students_All.TotalStudent, Enrolment_All_2022.Total_22, Students_All.Boys, Students_All.Girls, Teacher.Teacher, Class_Room.Class_room, Round([TotalStudent]/[Teacher],0) AS STR, Round([TotalStudent]/[Class_room],0) AS SCR, Students_All.[24 School]
+FROM Enrolment_All_2022 LEFT JOIN ((Students_All LEFT JOIN Teacher ON Students_All.SCHOOL_CODE = Teacher.SCHOOL_CODE) LEFT JOIN Class_Room ON Students_All.SCHOOL_CODE = Class_Room.SCHOOL_CODE) ON Enrolment_All_2022.SCHOOL_CODE = Students_All.SCHOOL_CODE;
+
+
+
+================================================================================
+Query Name: Find duplicates for GEN_INFO
+--------------------------------------------------------------------------------
+SELECT First(GEN_INFO.[SCHOOL_CODE]) AS [SCHOOL_CODE Field], Count(GEN_INFO.[SCHOOL_CODE]) AS NumberOfDups
+FROM GEN_INFO
+GROUP BY GEN_INFO.[SCHOOL_CODE]
+HAVING (((Count(GEN_INFO.[SCHOOL_CODE]))>1));
+
+
+
+================================================================================
+Query Name: GEN_INFO Without Matching No of Classrooms
+--------------------------------------------------------------------------------
+SELECT GEN_INFO.SCHOOL_CODE
+FROM GEN_INFO LEFT JOIN [No of Classrooms] ON GEN_INFO.[SCHOOL_CODE] = [No of Classrooms].[SCHOOL_CODE]
+WHERE ((([No of Classrooms].SCHOOL_CODE) Is Null));
+
+
+
+================================================================================
+Query Name: GEN_INFO Without Matching ROOM
+--------------------------------------------------------------------------------
+SELECT GEN_INFO.SCHOOL_CODE
+FROM GEN_INFO LEFT JOIN ROOM ON GEN_INFO.[SCHOOL_CODE] = ROOM.[SCHOOL_CODE]
+WHERE (((ROOM.SCHOOL_CODE) Is Null));
+
+
+
+================================================================================
+Query Name: GEN_INFO Without Matching TEACHER_LIST
+--------------------------------------------------------------------------------
+SELECT GEN_INFO.SCHOOL_CODE
+FROM GEN_INFO LEFT JOIN TEACHER_LIST ON GEN_INFO.[SCHOOL_CODE] = TEACHER_LIST.[SCHOOL_CODE]
+WHERE (((TEACHER_LIST.SCHOOL_CODE) Is Null));
+
+
+
+================================================================================
+Query Name: Geolocation
+--------------------------------------------------------------------------------
+SELECT edn_thana.DIVISION_NAME, edn_thana.DISTRICT_NAME, Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3093,1,Null)) AS [Hore area], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3094,1,Null)) AS [Hily Area], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3095,1,Null)) AS [Coastal Area], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3096,1,Null)) AS [Char Area], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3097,1,Null)) AS [Urban Slum], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3099,1,Null)) AS [Tea Garden], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3100,1,Null)) AS [Plain Land], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3131,1,Null)) AS [Riverside Area], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3132,1,Null)) AS [Hilly Tea Garden], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3133,1,Null)) AS [Bordar Area], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3134,1,Null)) AS [Island Area], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3135,1,Null)) AS [Inaccessible Area], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3136,1,Null)) AS [Completely Inaccessible Area], Sum(IIf([GEOGRAPHICAL_LOCATION_TYPE_ID]=3137,1,Null)) AS Other, Sum(IIf([location_school]=3090,1,Null)) AS [Industrial Area], Sum(IIf([location_school]=3091,1,Null)) AS [Urban Area], Sum(IIf([location_school]=3092,1,Null)) AS [Rural Area]
+FROM edn_thana INNER JOIN (GEN_INFO INNER JOIN SCHOOL_GEOGRAPHIC ON GEN_INFO.SCHOOL_CODE = SCHOOL_GEOGRAPHIC.SCHOOL_CODE) ON edn_thana.AREA_CODE_Txt = GEN_INFO.AREA_CODE
+GROUP BY edn_thana.DIVISION_NAME, edn_thana.DISTRICT_NAME;
+
+
+
+================================================================================
+Query Name: GPS by than
+--------------------------------------------------------------------------------
+SELECT GEN_INFO.SCHOOL_CODE, GEN_INFO.SCHOOL_TYPE_ID, Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME, Thana_List.AREA_CODE, Thana_List.DIVISION_CODE, Thana_List.DISTRICT_CODE
+FROM GEN_INFO INNER JOIN Thana_List ON GEN_INFO.AREA_CODE = Thana_List.AREA_CODE_Text
+GROUP BY GEN_INFO.SCHOOL_CODE, GEN_INFO.SCHOOL_TYPE_ID, Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME, Thana_List.AREA_CODE, Thana_List.DIVISION_CODE, Thana_List.DISTRICT_CODE
+HAVING (((GEN_INFO.SCHOOL_TYPE_ID)=2026 Or (GEN_INFO.SCHOOL_TYPE_ID)=2027 Or (GEN_INFO.SCHOOL_TYPE_ID)=2029))
+ORDER BY Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME;
+
+
+
+================================================================================
+Query Name: GPS having 401-500 Students
+--------------------------------------------------------------------------------
+SELECT STD_ADMISSION.SCHOOL_TYPE_ID, GEN_INFO.DIVISION_NAME, GEN_INFO.DISTRICT_NAME, GEN_INFO.UPAZILA_NAME, STD_ADMISSION.SCHOOL_CODE, GEN_INFO.SCHOOL_NAME_ENG, GEN_INFO.SCHOOL_NAME_BAN, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, STD_ADMISSION.ONE_BOY, STD_ADMISSION.ONE_GIRL, STD_ADMISSION.TWO_BOY, STD_ADMISSION.TWO_GIRL, STD_ADMISSION.THREE_BOY, STD_ADMISSION.THREE_GIRL, STD_ADMISSION.FOUR_BOY, STD_ADMISSION.FOUR_GIRL, STD_ADMISSION.FIVE_BOY, STD_ADMISSION.FIVE_GIRL, [FIVE_BOY]+[FIVE_GIRL]+[FOUR_BOY]+[FOUR_GIRL]+[ONE_BOY]+[ONE_GIRL]+[PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL]+[THREE_BOY]+[THREE_GIRL]+[TWO_BOY]+[TWO_GIRL] AS Total
+FROM STD_ADMISSION INNER JOIN GEN_INFO ON STD_ADMISSION.SCHOOL_CODE = GEN_INFO.SCHOOL_CODE
+WHERE (((STD_ADMISSION.SCHOOL_TYPE_ID)=2026 Or (STD_ADMISSION.SCHOOL_TYPE_ID)=2027 Or (STD_ADMISSION.SCHOOL_TYPE_ID)=2029) AND (([FIVE_BOY]+[FIVE_GIRL]+[FOUR_BOY]+[FOUR_GIRL]+[ONE_BOY]+[ONE_GIRL]+[PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL]+[THREE_BOY]+[THREE_GIRL]+[TWO_BOY]+[TWO_GIRL])>=301 And ([FIVE_BOY]+[FIVE_GIRL]+[FOUR_BOY]+[FOUR_GIRL]+[ONE_BOY]+[ONE_GIRL]+[PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL]+[THREE_BOY]+[THREE_GIRL]+[TWO_BOY]+[TWO_GIRL])<=500));
+
+
+
+================================================================================
+Query Name: GPS_Teacher
+--------------------------------------------------------------------------------
+SELECT TEACHER_LIST.SCHOOL_TYPE_ID, Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, SCHOOL_TYPE.Order_New, SCHOOL_TYPE.NAME_New, TEACHER_LIST.SCHOOL_CODE, Count(TEACHER_LIST.GENDER) AS Teacher
+FROM (Thana_List INNER JOIN TEACHER_LIST ON Thana_List.AREA_CODE = TEACHER_LIST.UPA_CODE) INNER JOIN SCHOOL_TYPE ON TEACHER_LIST.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID
+GROUP BY TEACHER_LIST.SCHOOL_TYPE_ID, Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, SCHOOL_TYPE.Order_New, SCHOOL_TYPE.NAME_New, TEACHER_LIST.SCHOOL_CODE
+HAVING (((TEACHER_LIST.SCHOOL_TYPE_ID)=2026 Or (TEACHER_LIST.SCHOOL_TYPE_ID)=2027 Or (TEACHER_LIST.SCHOOL_TYPE_ID)=2029));
+
+
+
+================================================================================
+Query Name: No of Classrooms
+--------------------------------------------------------------------------------
+SELECT ROOM.SCHOOL_CODE, GEN_INFO.AREA_CODE, ROOM.SCHOOL_TYPE_ID, ROOM.USAGE_PURPOSE, Count(ROOM.SCHOOL_CODE) AS CountOfSCHOOL_CODE
+FROM GEN_INFO INNER JOIN ROOM ON GEN_INFO.SCHOOL_CODE = ROOM.SCHOOL_CODE
+GROUP BY ROOM.SCHOOL_CODE, GEN_INFO.AREA_CODE, ROOM.SCHOOL_TYPE_ID, ROOM.USAGE_PURPOSE
+HAVING (((ROOM.USAGE_PURPOSE)=3114 Or (ROOM.USAGE_PURPOSE)=15));
+
+
+
+================================================================================
+Query Name: Number of Classrooms by Schools
+--------------------------------------------------------------------------------
+SELECT [No of Classrooms].SCHOOL_CODE, [No of Classrooms].AREA_CODE, Sum([No of Classrooms].CountOfSCHOOL_CODE) AS SumOfCountOfSCHOOL_CODE
+FROM [No of Classrooms]
+GROUP BY [No of Classrooms].SCHOOL_CODE, [No of Classrooms].AREA_CODE;
+
+
+
+================================================================================
+Query Name: PPE
+--------------------------------------------------------------------------------
+SELECT STD_ADMISSION.UPAZILA_CODE, Thana_List.AREA_CODE, Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME, STD_ADMISSION.SCHOOL_TYPE_ID, SCHOOL_TYPE.SCHOOL_TYPE_ID_New, SCHOOL_TYPE.Order_New, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, [PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL] AS TotalPPE
+FROM (Thana_List INNER JOIN STD_ADMISSION ON Thana_List.AREA_CODE = STD_ADMISSION.UPAZILA_CODE) INNER JOIN SCHOOL_TYPE ON (SCHOOL_TYPE.SCHOOL_TYPE_ID = STD_ADMISSION.SCHOOL_TYPE_ID) AND (STD_ADMISSION.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID)
+WHERE ((([PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL])>0));
+
+
+
+================================================================================
+Query Name: PPE_5+Year
+--------------------------------------------------------------------------------
+SELECT AGE_WISE_ADMISSION.SCHOOL_CODE, AGE_WISE_ADMISSION.AGE, Sum(AGE_WISE_ADMISSION.PRE_PRIMARY_BOY) AS SumOfPRE_PRIMARY_BOY, Sum(AGE_WISE_ADMISSION.PRE_PRIMARY_GIRL) AS SumOfPRE_PRIMARY_GIRL
+FROM AGE_WISE_ADMISSION
+GROUP BY AGE_WISE_ADMISSION.SCHOOL_CODE, AGE_WISE_ADMISSION.AGE
+HAVING (((AGE_WISE_ADMISSION.AGE)=5 Or (AGE_WISE_ADMISSION.AGE)=6 Or (AGE_WISE_ADMISSION.AGE)=7));
+
+
+
+================================================================================
+Query Name: PPE_5yrs_Total
+--------------------------------------------------------------------------------
+SELECT [PPE_5+Year].SCHOOL_CODE, Sum([PPE_5+Year].SumOfPRE_PRIMARY_BOY) AS PPE_Boy, Sum([PPE_5+Year].SumOfPRE_PRIMARY_GIRL) AS PPE_Girl
+FROM [PPE_5+Year]
+GROUP BY [PPE_5+Year].SCHOOL_CODE;
+
+
+
+================================================================================
+Query Name: PPE_Inforamtion
+--------------------------------------------------------------------------------
+SELECT SCHOOL_TYPE.Order_New, SCHOOL_TYPE.NAME_New, Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, [PRE_PRIMARY_BOY]+[PRE_PRIMARY_Girl] AS PPE
+FROM (STD_ADMISSION INNER JOIN SCHOOL_TYPE ON STD_ADMISSION.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID) INNER JOIN Thana_List ON STD_ADMISSION.UPAZILA_CODE = Thana_List.AREA_CODE
+WHERE (((SCHOOL_TYPE.Order_New)=6) AND (([PRE_PRIMARY_BOY]+[PRE_PRIMARY_Girl])>0));
+
+
+
+================================================================================
+Query Name: School_enrolment
+--------------------------------------------------------------------------------
+SELECT GEN_INFO.DIVISION_NAME, GEN_INFO.SCHOOL_TYPE_ID, GEN_INFO.SCHOOL_CODE, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, STD_ADMISSION.ONE_BOY, STD_ADMISSION.ONE_GIRL, STD_ADMISSION.TWO_BOY, STD_ADMISSION.TWO_GIRL, STD_ADMISSION.THREE_BOY, STD_ADMISSION.THREE_GIRL, STD_ADMISSION.FOUR_BOY, STD_ADMISSION.FOUR_GIRL, STD_ADMISSION.FIVE_BOY, STD_ADMISSION.FIVE_GIRL
+FROM GEN_INFO INNER JOIN STD_ADMISSION ON GEN_INFO.SCHOOL_CODE = STD_ADMISSION.SCHOOL_CODE
+GROUP BY GEN_INFO.DIVISION_NAME, GEN_INFO.SCHOOL_TYPE_ID, GEN_INFO.SCHOOL_CODE, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, STD_ADMISSION.ONE_BOY, STD_ADMISSION.ONE_GIRL, STD_ADMISSION.TWO_BOY, STD_ADMISSION.TWO_GIRL, STD_ADMISSION.THREE_BOY, STD_ADMISSION.THREE_GIRL, STD_ADMISSION.FOUR_BOY, STD_ADMISSION.FOUR_GIRL, STD_ADMISSION.FIVE_BOY, STD_ADMISSION.FIVE_GIRL
+HAVING (((GEN_INFO.SCHOOL_TYPE_ID)=2026 Or (GEN_INFO.SCHOOL_TYPE_ID)=2027 Or (GEN_INFO.SCHOOL_TYPE_ID)=2029));
+
+
+
+================================================================================
+Query Name: SCR40
+--------------------------------------------------------------------------------
+SELECT Students_All.SCHOOL_CODE, Students_All.TotalStudent, Students_All.StuwithPPE, Class_Room_NotZero.Class_room, Class_Room_NotZero.TotalCLRooms, IIf([TotalStudent]/[Class_room]<=40,1,0) AS SCR40, IIf([StuwithPPE]/[TotalCLRooms]<=40,1,0) AS SCR40PPE
+FROM Class_Room_NotZero INNER JOIN Students_All ON Class_Room_NotZero.SCHOOL_CODE = Students_All.SCHOOL_CODE;
+
+
+
+================================================================================
+Query Name: Six_Eight_Schools_2023
+--------------------------------------------------------------------------------
+SELECT edn_thana.DIVISION_NAME, edn_thana.DISTRICT_NAME, edn_thana.UPAZILA_NAME, GEN_INFO.SCHOOL_NAME_ENG, STD_ADMISSION.SCHOOL_CODE, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, [PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL] AS PPE, [ONE_BOY]+[TWO_BOY]+[THREE_BOY]+[FOUR_BOY]+[FIVE_BOY] AS Boys, [ONE_GIRL]+[TWO_GIRL]+[THREE_GIRL]+[FOUR_GIRL]+[FiVE_GIRL] AS Girls, [ONE_BOY]+[TWO_BOY]+[THREE_BOY]+[FOUR_BOY]+[FIVE_BOY]+[ONE_GIRL]+[TWO_GIRL]+[THREE_GIRL]+[FOUR_GIRL]+[FiVE_GIRL] AS TotalI_V, STD_ADMISSION.SIX_EIGHT_BOY, STD_ADMISSION.SIX_EIGHT_GIRL, [SIX_EIGHT_BOY]+[SIX_EIGHT_girl] AS TotalSIX_Eight, SCHOOL_TYPE.Order_New, Teacher.Teacher
+FROM (edn_thana INNER JOIN ((STD_ADMISSION INNER JOIN SCHOOL_TYPE ON STD_ADMISSION.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID) INNER JOIN GEN_INFO ON STD_ADMISSION.SCHOOL_CODE = GEN_INFO.SCHOOL_CODE) ON edn_thana.AREA_CODE = STD_ADMISSION.UPAZILA_CODE) INNER JOIN Teacher ON STD_ADMISSION.SCHOOL_CODE = Teacher.SCHOOL_CODE
+WHERE ((([SIX_EIGHT_BOY]+[SIX_EIGHT_girl])>0) AND ((SCHOOL_TYPE.Order_New)=1));
+
+
+
+================================================================================
+Query Name: STR40
+--------------------------------------------------------------------------------
+SELECT Students_All.SCHOOL_CODE, Students_All.StuwithPPE, Teacher.Teacher, IIf([StuwithPPE]/[Teacher]<=40,1,0) AS STR40
+FROM Teacher INNER JOIN Students_All ON Teacher.SCHOOL_CODE = Students_All.SCHOOL_CODE;
+
+
+
+================================================================================
+Query Name: Student_Final
+--------------------------------------------------------------------------------
+SELECT Total_Student_1.DIVISION_NAME AS Expr1, Sum(Total_Student_1.PRE_PRIMARY_BOY) AS SumOfPRE_PRIMARY_BOY, Sum(Total_Student_1.PRE_PRIMARY_GIRL) AS SumOfPRE_PRIMARY_GIRL, Sum(Total_Student_1.Total) AS SumOfTotal
+FROM Total_Student AS Total_Student_1
+GROUP BY Total_Student_1.DIVISION_NAME;
+
+
+
+================================================================================
+Query Name: Students_All
+--------------------------------------------------------------------------------
+SELECT SCHOOL_TYPE.Order_New, Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME, SCHOOL_TYPE.Order_New, GEN_INFO.SCHOOL_TYPE_ID, STD_ADMISSION.SCHOOL_CODE, SCHOOL_TYPE.NAME, GEN_INFO.SCHOOL_NAME_ENG, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, STD_ADMISSION.ONE_BOY, STD_ADMISSION.ONE_GIRL, STD_ADMISSION.TWO_BOY, STD_ADMISSION.TWO_GIRL, STD_ADMISSION.THREE_BOY, STD_ADMISSION.THREE_GIRL, STD_ADMISSION.FOUR_BOY, STD_ADMISSION.FOUR_GIRL, STD_ADMISSION.FIVE_BOY, STD_ADMISSION.FIVE_GIRL, [ONE_BOY]+[TWO_BOY]+[THREE_BOY]+[FOUR_BOY]+[FIVE_BOY]+[ONE_GIRL]+[TWO_GIRL]+[THREE_GIRL]+[FOUR_GIRL]+[FIVE_GIRL] AS TotalStudent, [One_BOY]+[Two_BOY]+[THREE_BOY]+[Four_BOY]+[Five_BOY] AS Boys, [One_Girl]+[Two_Girl]+[THREE_Girl]+[Four_Girl]+[Five_Girl] AS Girls, [ONE_BOY]+[TWO_BOY]+[THREE_BOY]+[FOUR_BOY]+[FIVE_BOY]+[ONE_GIRL]+[TWO_GIRL]+[THREE_GIRL]+[FOUR_GIRL]+[FIVE_GIRL]+[PRE_PRIMARY_BOY]+[PRE_PRIMARY_Girl] AS StuwithPPE, GEN_INFO.[24 School], STD_ADMISSION.SIX_EIGHT_BOY, STD_ADMISSION.SIX_EIGHT_GIRL, Teacher.Teacher
+FROM ((Thana_List INNER JOIN (GEN_INFO INNER JOIN STD_ADMISSION ON GEN_INFO.SCHOOL_CODE = STD_ADMISSION.SCHOOL_CODE) ON Thana_List.AREA_CODE_Text = GEN_INFO.AREA_CODE) INNER JOIN SCHOOL_TYPE ON STD_ADMISSION.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID) INNER JOIN Teacher ON STD_ADMISSION.SCHOOL_CODE = Teacher.SCHOOL_CODE
+WHERE (((SCHOOL_TYPE.Order_New)<>1));
+
+
+
+================================================================================
+Query Name: Students_GPS
+--------------------------------------------------------------------------------
+SELECT STD_ADMISSION.SCHOOL_TYPE_ID, STD_ADMISSION.SCHOOL_CODE, [PRE_PRIMARY_BOY]+[ONE_BOY]+[TWO_BOY]+[THREE_BOY]+[FOUR_BOY]+[FIVE_BOY] AS Boys, [PRE_PRIMARY_GIRL]+[ONE_GIRL]+[TWO_GIRL]+[THREE_GIRL]+[FOUR_GIRL]+[FIVE_GIRL] AS Girls, [Boys]+[Girls] AS Total
+FROM STD_ADMISSION
+WHERE (((STD_ADMISSION.SCHOOL_TYPE_ID)=2026 Or (STD_ADMISSION.SCHOOL_TYPE_ID)=2027 Or (STD_ADMISSION.SCHOOL_TYPE_ID)=2029));
+
+
+
+================================================================================
+Query Name: Students_GPS Without Matching No of Classrooms
+--------------------------------------------------------------------------------
+SELECT Students_GPS.SCHOOL_CODE
+FROM Students_GPS LEFT JOIN [No of Classrooms] ON Students_GPS.[SCHOOL_CODE] = [No of Classrooms].[SCHOOL_CODE]
+WHERE ((([No of Classrooms].SCHOOL_CODE) Is Null));
+
+
+
+================================================================================
+Query Name: students_PPE-G5(All schools)
+--------------------------------------------------------------------------------
+SELECT STD_ADMISSION.SCHOOL_CODE, STD_ADMISSION.SCHOOL_TYPE_ID, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, STD_ADMISSION.PRE_PRIMARY_BOY, STD_ADMISSION.PRE_PRIMARY_GIRL, STD_ADMISSION.ONE_BOY, STD_ADMISSION.ONE_GIRL, STD_ADMISSION.TWO_BOY, STD_ADMISSION.TWO_GIRL, STD_ADMISSION.THREE_BOY, STD_ADMISSION.THREE_GIRL, STD_ADMISSION.FOUR_BOY, STD_ADMISSION.FOUR_GIRL, STD_ADMISSION.FIVE_BOY, STD_ADMISSION.FIVE_GIRL, [PRE_PRIMARY_BOY]+[PRE_PRIMARY_GIRL]+[ONE_BOY]+[ONE_GIRL]+[TWO_BOY]+[TWO_GIRL]+[THREE_BOY]+[THREE_GIRL]+[FOUR_BOY]+[FOUR_GIRL]+[FIVE_BOY]+[FIVE_GIRL] AS Total_stu
+FROM STD_ADMISSION;
+
+
+
+================================================================================
+Query Name: Student-Teacher(ALL) by Arif
+--------------------------------------------------------------------------------
+SELECT [students_PPE-G5(All schools)].SCHOOL_CODE, [students_PPE-G5(All schools)].SCHOOL_TYPE_ID, SCHOOL_TYPE.Order_New, [students_PPE-G5(All schools)].Total_stu
+FROM [students_PPE-G5(All schools)] INNER JOIN SCHOOL_TYPE ON [students_PPE-G5(All schools)].SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID
+WHERE (((SCHOOL_TYPE.Order_New)=1) AND (([students_PPE-G5(All schools)].Total_stu)>=201 And ([students_PPE-G5(All schools)].Total_stu)<=250));
+
+
+
+================================================================================
+Query Name: Stuent_Teacher WB
+--------------------------------------------------------------------------------
+SELECT Total_Student.SCHOOL_CODE, [PPE_Boy]+[PPE_Girl] AS PPE, Total_Student.Grade1, Total_Student.Grade2, Total_Student.Grade3, Total_Student.Grade4, Total_Student.Grade5, Teacher.Teacher AS [Number of Total Teachers]
+FROM (Total_Student LEFT JOIN Teacher ON Total_Student.SCHOOL_CODE = Teacher.SCHOOL_CODE) LEFT JOIN PPE_5yrs_Total ON Total_Student.SCHOOL_CODE = PPE_5yrs_Total.SCHOOL_CODE;
+
+
+
+================================================================================
+Query Name: Teacher
+--------------------------------------------------------------------------------
+SELECT Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, SCHOOL_TYPE.Order_New, SCHOOL_TYPE.NAME_New, TEACHER_LIST.SCHOOL_CODE, Count(TEACHER_LIST.GENDER) AS Teacher
+FROM (Thana_List INNER JOIN TEACHER_LIST ON Thana_List.AREA_CODE = TEACHER_LIST.UPA_CODE) INNER JOIN SCHOOL_TYPE ON TEACHER_LIST.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID
+GROUP BY Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, SCHOOL_TYPE.Order_New, SCHOOL_TYPE.NAME_New, TEACHER_LIST.SCHOOL_CODE;
+
+
+
+================================================================================
+Query Name: teacher by post_by ARIF
+--------------------------------------------------------------------------------
+SELECT SCHOOL_TYPE.Order_New, TEACHER_LIST.SCHOOL_TYPE_ID, TEACHER_LIST.SCHOOL_CODE, TEACHER_LIST.POST_ID, [teacher_Post ID].DESIGNATION_ID, [teacher_Post ID].NAME, TEACHER_LIST.GENDER, Count(TEACHER_LIST.PIN_NO) AS CountOfPIN_NO
+FROM (TEACHER_LIST INNER JOIN [teacher_Post ID] ON TEACHER_LIST.POST_ID = [teacher_Post ID].DESIGNATION_ID) INNER JOIN SCHOOL_TYPE ON TEACHER_LIST.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID
+GROUP BY SCHOOL_TYPE.Order_New, TEACHER_LIST.SCHOOL_TYPE_ID, TEACHER_LIST.SCHOOL_CODE, TEACHER_LIST.POST_ID, [teacher_Post ID].DESIGNATION_ID, [teacher_Post ID].NAME, TEACHER_LIST.GENDER
+HAVING (((SCHOOL_TYPE.Order_New)=1));
+
+
+
+================================================================================
+Query Name: Teacher_Total_GPS
+--------------------------------------------------------------------------------
+SELECT Teacher.DIVISION_NAME, Teacher.DISTRICT_NAME, Count(Teacher.GENDER) AS CountOfGENDER
+FROM Teacher
+GROUP BY Teacher.DIVISION_NAME, Teacher.DISTRICT_NAME;
+
+
+
+================================================================================
+Query Name: Teachers by School
+--------------------------------------------------------------------------------
+SELECT TEACHER_LIST.UPA_CODE, TEACHER_LIST.SCHOOL_CODE, TEACHER_LIST.SCHOOL_TYPE_ID, TEACHER_LIST.GENDER, Count(TEACHER_LIST.PIN_NO) AS CountOfPIN_NO
+FROM TEACHER_LIST
+GROUP BY TEACHER_LIST.UPA_CODE, TEACHER_LIST.SCHOOL_CODE, TEACHER_LIST.SCHOOL_TYPE_ID, TEACHER_LIST.GENDER;
+
+
+
+================================================================================
+Query Name: teacher's training
+--------------------------------------------------------------------------------
+SELECT TEACHER_LIST.GENDER, GOVT_TEACHER_TRAINING.NAME_LOCAL, Count(GOVT_TEACHER_TRAINING.PIN_NO) AS CountOfPIN_NO
+FROM TEACHER_LIST INNER JOIN GOVT_TEACHER_TRAINING ON TEACHER_LIST.PIN_NO = GOVT_TEACHER_TRAINING.PIN_NO
+GROUP BY TEACHER_LIST.GENDER, GOVT_TEACHER_TRAINING.NAME_LOCAL;
+
+
+
+================================================================================
+Query Name: Total_Student
+--------------------------------------------------------------------------------
+SELECT STD_ADMISSION.SCHOOL_CODE, Sum([ONE_BOY]+[ONE_GIRL]) AS Grade1, Sum([TWO_BOY]+[TWO_GIRL]) AS Grade2, Sum([THREE_BOY]+[THREE_GIRL]) AS Grade3, Sum([FOUR_BOY]+[FOUR_GIRL]) AS Grade4, Sum([FIVE_BOY]+[FIVE_GIRL]) AS Grade5
+FROM STD_ADMISSION
+GROUP BY STD_ADMISSION.SCHOOL_CODE;
+
+
+
+================================================================================
+Query Name: Trained_Teacher_ALL Types
+--------------------------------------------------------------------------------
+SELECT TEACHER_LIST.UPA_CODE, TEACHER_LIST.SCHOOL_CODE, GOVT_TEACHER_TRAINING.PIN_NO, TEACHER_LIST.SCHOOL_TYPE_ID, TEACHER_LIST.[Teacher Name], TEACHER_LIST.GENDER, Training_Code.Training_Name, Training_Code.Training_Name_eng, Training_Code.Code, GOVT_TEACHER_TRAINING.NAME_LOCAL, IIf([Code]=5,"BEd",Null) AS BEd, IIf([Code]=24,"MEd",Null) AS MEd, IIf([Code]=8,"C_in-Ed",Null) AS [C-in-Ed], IIf([Code]=15,"DPEd",Null) AS DPEd, IIf([Code]=31,"PPE",Null) AS PPE, IIf([Code]=36,"Sub_eng",Null) AS Sub_eng, IIf([Code]=39,"Sub_Social",Null) AS Sub_Social, IIf([Code]=17,"ICT_Edu",Null) AS ICT_Edu, IIf(([BEd] Is Not Null Or [MEd] Is Not Null Or [C-in-Ed] Is Not Null Or [DPED] Is Not Null),1,Null) AS Trained_teacher, IIf(([C-in-Ed] Is Not Null Or [DPED] Is Not Null),1,Null) AS [C-in-Ed_DPED], IIf(([C-in-Ed] Is Not Null And [DPED] Is Not Null),1,Null) AS [BothC-in-Ed_DPED]
+FROM Training_Code INNER JOIN (TEACHER_LIST INNER JOIN GOVT_TEACHER_TRAINING ON TEACHER_LIST.PIN_NO = GOVT_TEACHER_TRAINING.PIN_NO) ON Training_Code.Training_Name = GOVT_TEACHER_TRAINING.NAME_LOCAL;
+
+
+
+================================================================================
+Query Name: Trained_Teacher_Final
+--------------------------------------------------------------------------------
+SELECT Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Sum(IIf(([C-in-Ed]="C_In-Ed" And [Gender]="MALE"),1,Null)) AS Male_CInED, Sum(IIf(([C-in-Ed]="C_In-Ed" And [Gender]="FEMALE"),1,Null)) AS Feale_CInED, Sum(IIf(([DPED]="DPEd" And [Gender]="MALE"),1,Null)) AS Male_DPED, Sum(IIf(([DPED]="DPEd" And [Gender]="FEMALE"),1,Null)) AS Female_DPED
+FROM Thana_List INNER JOIN Trained_TeacherGPS ON Thana_List.AREA_CODE = Trained_TeacherGPS.UPA_CODE
+GROUP BY Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME;
+
+
+
+================================================================================
+Query Name: Trained_TeacherGPS
+--------------------------------------------------------------------------------
+SELECT TEACHER_LIST.UPA_CODE, TEACHER_LIST.SCHOOL_CODE, GOVT_TEACHER_TRAINING.PIN_NO, TEACHER_LIST.SCHOOL_TYPE_ID, TEACHER_LIST.[Teacher Name], TEACHER_LIST.GENDER, Training_Code.Training_Name, Training_Code.Training_Name_eng, Training_Code.Code, GOVT_TEACHER_TRAINING.NAME_LOCAL, IIf([Code]=5,"BEd",Null) AS BEd, IIf([Code]=24,"MEd",Null) AS MEd, IIf([Code]=8,"C_in-Ed",Null) AS [C-in-Ed], IIf([Code]=15,"DPEd",Null) AS DPEd, IIf([Code]=31,"PPE",Null) AS PPE, IIf([Code]=36,"Sub_eng",Null) AS Sub_eng, IIf([Code]=39,"Sub_Social",Null) AS Sub_Social, IIf([Code]=17,"ICT_Edu",Null) AS ICT_Edu, IIf(([BEd] Is Not Null Or [MEd] Is Not Null Or [C-in-Ed] Is Not Null Or [DPED] Is Not Null),1,Null) AS Trained_teacher, IIf(([C-in-Ed] Is Not Null Or [DPED] Is Not Null),1,Null) AS [C-in-Ed_DPED], IIf(([C-in-Ed] Is Not Null And [DPED] Is Not Null),1,Null) AS [BothC-in-Ed_DPED]
+FROM Training_Code INNER JOIN (TEACHER_LIST INNER JOIN GOVT_TEACHER_TRAINING ON TEACHER_LIST.PIN_NO = GOVT_TEACHER_TRAINING.PIN_NO) ON Training_Code.Training_Name = GOVT_TEACHER_TRAINING.NAME_LOCAL
+WHERE (((TEACHER_LIST.SCHOOL_TYPE_ID)=2026 Or (TEACHER_LIST.SCHOOL_TYPE_ID)=2027 Or (TEACHER_LIST.SCHOOL_TYPE_ID)=2029));
+
+
+
+================================================================================
+Query Name: Union Schools
+--------------------------------------------------------------------------------
+SELECT Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME, GEN_INFO.UPAZILA_CODE, GEN_INFO.SCHOOL_TYPE_ID, SCHOOL_TYPE.NAME, GEN_INFO.UNION_CODE, GEN_INFO.UNION_NAME, GEN_INFO.SCHOOL_NAME_ENG
+FROM (Thana_List INNER JOIN GEN_INFO ON Thana_List.AREA_CODE = GEN_INFO.UPAZILA_CODE) INNER JOIN SCHOOL_TYPE ON GEN_INFO.SCHOOL_TYPE_ID = SCHOOL_TYPE.SCHOOL_TYPE_ID
+GROUP BY Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Thana_List.UPAZILA_NAME, GEN_INFO.UPAZILA_CODE, GEN_INFO.SCHOOL_TYPE_ID, SCHOOL_TYPE.NAME, GEN_INFO.UNION_CODE, GEN_INFO.UNION_NAME, GEN_INFO.SCHOOL_NAME_ENG;
+
+
+
+================================================================================
+Query Name: WASH_Electricity
+--------------------------------------------------------------------------------
+SELECT school_wash.EMIS_CODE, school_wash.SCHOOL_TYPE_ID, GEN_INFO.DIVISION_NAME, GEN_INFO.DISTRICT_NAME, GEN_INFO.EMIS_CODE, IIf([PLAYFIELD_yn]="?????","Yes",Null) AS Play_Field, IIf([AREA_WALL_yn]="?????","Yes",Null) AS Area_Wall, IIf([WASHBLOCK_yn]="?????","Yes",Null) AS WASH_BLOCK, IIf([POWER_CONNECTION]=1,"Yes",Null) AS Electricity
+FROM school_wash INNER JOIN GEN_INFO ON school_wash.EMIS_CODE = GEN_INFO.EMIS_CODE;
+
+
+
+================================================================================
+Query Name: Basic_Information
+--------------------------------------------------------------------------------
+SELECT edn_thana.DIVISION_NAME, Sum(IIf([NAME_PLATE]=1,1,Null)) AS NAMEPLATE, Sum(IIf([BASIC_INFO_DISPLAYED]=1,1,Null)) AS BASIC_INFO_DISP, Sum(IIf([SLIP_ACTIVITIES]=1,1,Null)) AS SLIP_ACTIVITY, Sum(IIf([SCOUT_CLUB_ACTIVITIES]=1,1,Null)) AS SCOUT_CLUBACTIVITY, Sum(IIf([CLUB_TEAM_STOCK]=1,1,Null)) AS CLUB_TEAMSTOCK, Sum(IIf([SOCIAL_AUDIT]=1,1,Null)) AS SOCIALAUDIT, Sum(IIf([INNOVATION_ACTIVITIES]=1,1,Null)) AS INNOVATION_ACTIVITY, Sum(IIf([SCHOOL_FOR_DISABLED]=1,1,Null)) AS SCHOOL_DISABLED, Sum(IIf([SCHOOL_GATE]=1,1,Null)) AS SCHOOLgate, Sum(IIf([SHELTER_CUM_SCHOOL]=1,1,Null)) AS SHELTER_CUMSchool, Sum(IIf([SAFE_DRINKING_WATER]=1,1,Null)) AS SAFE_DRINK_WATER, Sum(IIf([LIBERATION_WAR_CORNER]=1,1,Null)) AS LIBERATION_WARCorner, Sum(IIf([HONESTY_STORE]=1,1,Null)) AS HONESTYStore, Sum(IIf([BOOK_CORNER]=1,1,Null)) AS BOOKconer, Sum(IIf([WALLS_OF_HUMANITY]=1,1,Null)) AS WALLS_humanity, Sum(IIf([DIRECTIONAL_BLADE]=1,1,Null)) AS DIRECTIONALblade, Sum(IIf([FIRST_AID_KIT]=1,1,Null)) AS FIRST_AIDkit, Sum(IIf([FIRE_EXTINGUISHER]=1,1,Null)) AS FIREextinguisher, Sum(IIf([RAMP]=1,1,Null)) AS RAMP_have, Sum(IIf([DAISY_BOOK]=1,1,0)) AS DAISYbook, Sum(IIf([BRAILLE_BOOK]=1,1,Null)) AS BRAILLEbokkk, Sum(IIf([WHEELCHAIR]=1,1,Null)) AS WHEEL_CHAIR, Sum(IIf([SIGN_LANG_MANUAL]=1,1,Null)) AS SIGN_LANGmanual, Sum(IIf([SIGN_LANG_TUTOR]=1,1,Null)) AS SIGN_LANGtotor, Sum(IIf([CRUTCHES]=1,1,Null)) AS _CRUTCHES, Sum(IIf([VISION_FENCING]=1,1,Null)) AS VISIONfencing, Sum(IIf([SILENT_ENVIRONMENT]=1,1,Null)) AS SILENTenvironment, Sum(IIf([COLOR_CONTRAST]=1,1,Null)) AS COLORcontrast, Sum(IIf([HEARING_AID]=1,1,Null)) AS HEARINGaid, Sum(IIf([USE_OF_DISINFECTANT]=1,1,Null)) AS USE_OFdisinfectant, Sum(IIf([POWER_CONNECTION]=1,1,Null)) AS POWERconnection, Sum(IIf([INTERNET_FACILITY]=1,1,Null)) AS INTERNETfacility, Sum(IIf([LITTLE_DOCTOR_ACTIVITIES]=1,1,Null)) AS LITTLE_DOCTORactivities, Sum(IIf([EARLY_WARNING_ACTIVITIES]=1,1,Null)) AS EARLY_WARNINGactivities, Sum(IIf([STUDENT_COUNCIL]=1,1,Null)) AS STUDENTcouncil, Sum(IIf([PLAYGROUND]=1,1,Null)) AS PLAY_GROUND, Sum(IIf([WITH_BOUNDARY]=1,1,Null)) AS Palyground_WITH_BOUNDARY, Sum(IIf([SPORTS_EQUIPMENT]=1,1,Null)) AS SPORTSequipment, Sum(IIf([STUDENT_WELFARE]=1,1,Null)) AS STUDENTwelfare
+FROM edn_thana INNER JOIN GPS_Geninfo ON edn_thana.AREA_CODE = GPS_Geninfo.AREA_CODE
+GROUP BY edn_thana.DIVISION_NAME;
+
+
+
+================================================================================
+Query Name: Disability_Ethnic Students
+--------------------------------------------------------------------------------
+SELECT ethnic.SCHOOL_CODE, DISABLE_ADMISSION.UPAZILA_CODE, Sum(DISABLE_ADMISSION.PRE_PRIMARY_BOY) AS SumOfPRE_PRIMARY_BOY1, Sum(DISABLE_ADMISSION.PRE_PRIMARY_GIRL) AS SumOfPRE_PRIMARY_GIRL1, Sum(DISABLE_ADMISSION.ONE_BOY) AS SumOfONE_BOY1, Sum(DISABLE_ADMISSION.ONE_GIRL) AS SumOfONE_GIRL1, Sum(DISABLE_ADMISSION.TWO_BOY) AS SumOfTWO_BOY1, Sum(DISABLE_ADMISSION.TWO_GIRL) AS SumOfTWO_GIRL1, Sum(DISABLE_ADMISSION.THREE_BOY) AS SumOfTHREE_BOY1, Sum(DISABLE_ADMISSION.THREE_GIRL) AS SumOfTHREE_GIRL1, Sum(DISABLE_ADMISSION.FOUR_BOY) AS SumOfFOUR_BOY1, Sum(DISABLE_ADMISSION.FOUR_GIRL) AS SumOfFOUR_GIRL1, Sum(DISABLE_ADMISSION.FIVE_BOY) AS SumOfFIVE_BOY1, Sum(DISABLE_ADMISSION.FIVE_GIRL) AS SumOfFIVE_GIRL1
+FROM ethnic INNER JOIN DISABLE_ADMISSION ON ethnic.SCHOOL_CODE = DISABLE_ADMISSION.SCHOOL_CODE
+GROUP BY ethnic.SCHOOL_CODE, DISABLE_ADMISSION.UPAZILA_CODE;
+
+
+
+================================================================================
+Query Name: ethnic
+--------------------------------------------------------------------------------
+SELECT [Ethnic Minority_enrollment].SCHOOL_CODE, Sum([Ethnic Minority_enrollment].PRE_PRIMARY_BOY) AS SumOfPRE_PRIMARY_BOY, Sum([Ethnic Minority_enrollment].PRE_PRIMARY_GIRL) AS SumOfPRE_PRIMARY_GIRL, Sum([Ethnic Minority_enrollment].ONE_BOY) AS SumOfONE_BOY, Sum([Ethnic Minority_enrollment].ONE_GIRL) AS SumOfONE_GIRL, Sum([Ethnic Minority_enrollment].TWO_BOY) AS SumOfTWO_BOY, Sum([Ethnic Minority_enrollment].TWO_GIRL) AS SumOfTWO_GIRL, Sum([Ethnic Minority_enrollment].THREE_BOY) AS SumOfTHREE_BOY, Sum([Ethnic Minority_enrollment].THREE_GIRL) AS SumOfTHREE_GIRL, Sum([Ethnic Minority_enrollment].FOUR_BOY) AS SumOfFOUR_BOY, Sum([Ethnic Minority_enrollment].FOUR_GIRL) AS SumOfFOUR_GIRL, Sum([Ethnic Minority_enrollment].FIVE_BOY) AS SumOfFIVE_BOY, Sum([Ethnic Minority_enrollment].FIVE_GIRL) AS SumOfFIVE_GIRL, [SumOfFIVE_BOY]+[SumOfFIVE_GIRL]+[SumOfFOUR_BOY]+[SumOfFOUR_GIRL]+[SumOfONE_BOY]+[SumOfONE_GIRL]+[SumOfPRE_PRIMARY_BOY]+[SumOfPRE_PRIMARY_GIRL]+[SumOfTHREE_BOY]+[SumOfTHREE_GIRL]+[SumOfTWO_BOY]+[SumOfTWO_GIRL] AS Total
+FROM [Ethnic Minority_enrollment]
+GROUP BY [Ethnic Minority_enrollment].SCHOOL_CODE
+HAVING (((Sum([Ethnic Minority_enrollment].PRE_PRIMARY_BOY))>0) AND ((Sum([Ethnic Minority_enrollment].PRE_PRIMARY_GIRL))>0) AND ((Sum([Ethnic Minority_enrollment].ONE_BOY))>0) AND ((Sum([Ethnic Minority_enrollment].ONE_GIRL))>0) AND ((Sum([Ethnic Minority_enrollment].TWO_BOY))>0) AND ((Sum([Ethnic Minority_enrollment].TWO_GIRL))>0) AND ((Sum([Ethnic Minority_enrollment].THREE_BOY))>0) AND ((Sum([Ethnic Minority_enrollment].THREE_GIRL))>0) AND ((Sum([Ethnic Minority_enrollment].FOUR_BOY))>0) AND ((Sum([Ethnic Minority_enrollment].FOUR_GIRL))>0) AND ((Sum([Ethnic Minority_enrollment].FIVE_BOY))>0) AND ((Sum([Ethnic Minority_enrollment].FIVE_GIRL))>0));
+
+
+
+================================================================================
+Query Name: Ethnic Minority
+--------------------------------------------------------------------------------
+SELECT Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME, Sum([Ethnic Minority_enrollment].PRE_PRIMARY_BOY) AS SumOfPRE_PRIMARY_BOY, Sum([Ethnic Minority_enrollment].PRE_PRIMARY_GIRL) AS SumOfPRE_PRIMARY_GIRL, Sum([Ethnic Minority_enrollment].ONE_BOY) AS SumOfONE_BOY, Sum([Ethnic Minority_enrollment].ONE_GIRL) AS SumOfONE_GIRL, Sum([Ethnic Minority_enrollment].TWO_BOY) AS SumOfTWO_BOY, Sum([Ethnic Minority_enrollment].TWO_GIRL) AS SumOfTWO_GIRL, Sum([Ethnic Minority_enrollment].THREE_BOY) AS SumOfTHREE_BOY, Sum([Ethnic Minority_enrollment].THREE_GIRL) AS SumOfTHREE_GIRL, Sum([Ethnic Minority_enrollment].FOUR_BOY) AS SumOfFOUR_BOY, Sum([Ethnic Minority_enrollment].FOUR_GIRL) AS SumOfFOUR_GIRL, Sum([Ethnic Minority_enrollment].FIVE_BOY) AS SumOfFIVE_BOY, Sum([Ethnic Minority_enrollment].FIVE_GIRL) AS SumOfFIVE_GIRL
+FROM Thana_List INNER JOIN [Ethnic Minority_enrollment] ON Thana_List.AREA_CODE = [Ethnic Minority_enrollment].UPAZILA_CODE
+GROUP BY Thana_List.DIVISION_NAME, Thana_List.DISTRICT_NAME;
+
+
+
+
+
